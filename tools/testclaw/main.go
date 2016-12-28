@@ -37,9 +37,9 @@ func main() {
 
 	for {
 		pinOnOff.Low()
-		time.Sleep(400 * time.Millisecond)
+		time.Sleep(time.Second)
 		pinOnOff.High()
 		pinDirection.Toggle()
-		time.Sleep(600 * time.Millisecond)
+		time.Sleep(2 * time.Second)
 	}
 }
