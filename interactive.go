@@ -14,10 +14,10 @@ import (
 
 const (
 	jsid = 0
-	leftRightPinNumber = 4
-	leftRightOnOffPinNumber = 17
-	upDownPinNumber = 2
-	upDownOnOffPinNumber = 3
+	leftRightPinNumber = 3
+	leftRightOnOffPinNumber = 2
+	upDownPinNumber = 17
+	upDownOnOffPinNumber = 4
 )
 
 // parseJSState converts the given joystick controller State into
@@ -25,9 +25,9 @@ const (
 func parseJSState(jsState joystick.State) claw.State {
 	m1 := motor.Stopped
 	leftRightAxis := jsState.AxisData[0]
-	if leftRightAxis > 0 {
+	if leftRightAxis < 0 {
 		m1 = motor.Forward
-	} else if leftRightAxis < 0 {
+	} else if leftRightAxis > 0 {
 		m1 = motor.Backward
 	}
 
