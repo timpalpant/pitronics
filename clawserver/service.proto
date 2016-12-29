@@ -1,0 +1,16 @@
+syntax = "proto3";
+package clawserver;
+
+import "pitronics/claw/motor/motor.proto";
+
+message SetClawStateRequest {
+    repeated motor.State motor_states = 1;
+}
+
+message SetClawStateResponse {
+}
+
+service ClawService {
+    // SetClawState sets the motor state for each of the claw motors.
+    rpc SetClawState(stream SetClawStateRequest) returns (SetClawStateResponse);
+}

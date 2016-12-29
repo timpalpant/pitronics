@@ -1,15 +1,9 @@
 package motor
 
 import (
+	"fmt"
+
 	"github.com/stianeikeland/go-rpio"
-)
-
-type State int
-
-const (
-	Forward State = iota
-	Backward
-	Stopped
 )
 
 // Motor represents a motor that can be driven forward or backward
@@ -18,7 +12,7 @@ const (
 // whether the motor is running or stopped.
 type Motor struct {
 	direction rpio.Pin
-	onOff rpio.Pin
+	onOff     rpio.Pin
 }
 
 func NewMotor(direction, onOff rpio.Pin) *Motor {
@@ -27,19 +21,23 @@ func NewMotor(direction, onOff rpio.Pin) *Motor {
 
 	return &Motor{
 		direction: direction,
-		onOff: onOff,
+		onOff:     onOff,
 	}
 }
 
-func (m *Motor) SetState(s State) {
+func (m *Motor) SetState(s State) error {
 	switch s {
-	case Forward:
+	case State_FORWARD:
 		m.direction.High()
 		m.onOff.Low()
-	case Backward:
+	case State_BACKWARD:
 		m.direction.Low()
 		m.onOff.Low()
-	case Stopped:
+	case State_STOPPED:
 		m.onOff.High()
+	default:
+		return fmt.Errorf("unknown motor state: %v", s)
 	}
+
+	return nil
 }

@@ -13,7 +13,7 @@ type Claw []*motor.Motor
 // Close stops all motors in the Claw.
 func (c Claw) Close() {
 	for _, m := range c {
-		m.SetState(motor.Stopped)
+		m.SetState(motor.State_STOPPED)
 	}
 }
 
