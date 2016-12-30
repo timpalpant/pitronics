@@ -1,11 +1,17 @@
+// jscontroller is a claw server client that listens for joystick events
+// and sends them to the claw server.
+// Run it with: `sudo ./jscontroller -server :8081`.
+// 
+// Use the left joystick axis to control the claw motors.
+
 package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 
+	"github.com/golang/glog"
 	"github.com/timpalpant/joystick"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -14,23 +20,25 @@ import (
 	"pitronics/clawserver"
 )
 
+const axisThreshold = 10
+
 // parseJSState converts the given joystick controller State into
 // the desired motor state for the Claw.
 func parseJSState(jsState joystick.State) *clawserver.SetClawStateRequest {
-	m1 := clawserver.STOPPED
+	m1 := motor.State_STOPPED
 	leftRightAxis := jsState.AxisData[0]
-	if leftRightAxis < 0 {
-		m1 = clawserver.FORWARD
-	} else if leftRightAxis > 0 {
-		m1 = clawserver.BACKWARD
+	if leftRightAxis < axisThreshold {
+		m1 = motor.State_FORWARD
+	} else if leftRightAxis > axisThreshold {
+		m1 = motor.State_BACKWARD
 	}
 
-	m2 := clawserver.BACKWARD
+	m2 := motor.State_STOPPED
 	upDownAxis := jsState.AxisData[1]
-	if upDownAxis > 0 {
-		m2 = clawserver.FORWARD
-	} else if upDownAxis < 0 {
-		m2 = clawserver.BACKWARD
+	if upDownAxis > axisThreshold {
+		m2 = motor.State_FORWARD
+	} else if upDownAxis < axisThreshold {
+		m2 = motor.State_BACKWARD
 	}
 
 	return &clawserver.SetClawStateRequest{
@@ -64,6 +72,11 @@ func main() {
 	if err != nil {
 		glog.Fatal(err)
 	}
+	defer func() {
+		if _, err := stream.CloseAndRecv(); err != nil {
+			glog.Fatal(err)
+		}
+	}()
 
 	// On each joystick event, get the joystick state and send it to the
 	// ClawServer until we receive SIGTERM.
@@ -76,7 +89,7 @@ func main() {
 		case <-jsEvents:
 			jsState, err := js.Read()
 			if err != nil {
-				fmt.Printf("error reading JS state: %v\n", err)
+				glog.Fatal("error reading JS state: %v\n", err)
 				return
 			}
 			clawStateReq := parseJSState(jsState)
@@ -84,10 +97,5 @@ func main() {
 				glog.Fatal(err)
 			}
 		}
-	}
-
-	_, err := stream.CloseAndRecv()
-	if err != nil {
-		glog.Fatal(err)
 	}
 }

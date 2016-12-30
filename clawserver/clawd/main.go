@@ -1,3 +1,6 @@
+// clawd is the main entrypoint for the claw server.
+// Run it with: `sudo ./clawd -port 8081 -logtostderr`.
+
 package main
 
 import (
@@ -42,7 +45,7 @@ func initClaw() *claw.Claw {
 }
 
 func main() {
-	port := flag.Int("port", 9123, "Port to run gRPC service on")
+	port := flag.Int("port", 8081, "Port to run gRPC service on")
 	flag.Parse()
 
 	glog.Info("Initializing claw")
