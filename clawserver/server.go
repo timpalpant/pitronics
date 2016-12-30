@@ -29,7 +29,7 @@ func (s *ClawServer) SetClawState(stream ClawService_SetClawStateServer) error {
 			return stream.SendAndClose(resp)
 		}
 		if err != nil {
-			glog.Error("SetClawState stream error: %v", err)
+			glog.Errorf("SetClawState stream error: %v", err)
 			return err
 		}
 
