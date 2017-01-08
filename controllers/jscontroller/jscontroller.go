@@ -27,7 +27,7 @@ const axisThreshold = 10
 func parseJSState(jsState joystick.State) *clawserver.SetClawStateRequest {
 	m1 := motor.State_STOPPED
 	leftRightAxis := jsState.AxisData[0]
-	if leftRightAxis < axisThreshold {
+	if leftRightAxis < -axisThreshold {
 		m1 = motor.State_FORWARD
 	} else if leftRightAxis > axisThreshold {
 		m1 = motor.State_BACKWARD
@@ -37,7 +37,7 @@ func parseJSState(jsState joystick.State) *clawserver.SetClawStateRequest {
 	upDownAxis := jsState.AxisData[1]
 	if upDownAxis > axisThreshold {
 		m2 = motor.State_FORWARD
-	} else if upDownAxis < axisThreshold {
+	} else if upDownAxis < -axisThreshold {
 		m2 = motor.State_BACKWARD
 	}
 

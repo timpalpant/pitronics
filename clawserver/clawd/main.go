@@ -21,10 +21,17 @@ import (
 )
 
 const (
-	leftRightPinNumber      = 3
-	leftRightOnOffPinNumber = 2
-	upDownPinNumber         = 17
-	upDownOnOffPinNumber    = 4
+	m1DirectionPinNumber = 1
+	m1OnOffPinNumber = 2
+	m2DirectionPinNumber = 3
+	m2OnOffPinNumber = 4
+	m3DirectionPinNumber = 5
+	m3OnOffPinNumber = 6
+	m4DirectionPinNumber = 7
+	m4OnOffPinNumber = 8
+	m5DirectionPinNumber = 9
+	m5OnOffPinNumber = 10
+	ledOnOffPinNumber = 11
 )
 
 func initClaw() *claw.Claw {
@@ -33,14 +40,24 @@ func initClaw() *claw.Claw {
 		panic(err)
 	}
 
-	leftRightPin := rpio.Pin(leftRightPinNumber)
-	leftRightOnOffPin := rpio.Pin(leftRightOnOffPinNumber)
-	upDownPin := rpio.Pin(upDownPinNumber)
-	upDownOnOffPin := rpio.Pin(upDownOnOffPinNumber)
+	m1DirectionPin := rpio.Pin(m1DirectionPinNumber)
+	m1OnOffPin := rpio.Pin(m1OnOffPinNumber)
+	m2DirectionPin := rpio.Pin(m2DirectionPinNumber)
+	m2OnOffPin := rpio.Pin(m2OnOffPinNumber)
+	m3DirectionPin := rpio.Pin(m3DirectionPinNumber)
+	m3OnOffPin := rpio.Pin(m3OnOffPinNumber)
+	m4DirectionPin := rpio.Pin(m4DirectionPinNumber)
+	m4OnOffPin := rpio.Pin(m4OnOffPinNumber)
+	m5DirectionPin := rpio.Pin(m5DirectionPinNumber)
+	m5OnOffPin := rpio.Pin(m5OnOffPinNumber)
+	ledPin := rpio.Pin(ledOnOffPinNumber)
 
 	return &claw.Claw{
-		motor.NewMotor(leftRightPin, leftRightOnOffPin),
-		motor.NewMotor(upDownPin, upDownOnOffPin),
+		Motors: []motor.Motor{
+			motor.NewMotor(leftRightPin, leftRightOnOffPin),
+			motor.NewMotor(upDownPin, upDownOnOffPin),
+		},
+		LED: ledPin,
 	}
 }
 

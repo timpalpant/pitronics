@@ -33,7 +33,10 @@ func (s *ClawServer) SetClawState(stream ClawService_SetClawStateServer) error {
 			return err
 		}
 
-		clawState := claw.State(req.MotorStates)
+		clawState := claw.State{
+			req.MotorStates,
+			req.Led,
+		}
 		glog.Infof("Setting claw state to: %v", clawState)
 		s.Claw.SetState(clawState)
 	}
