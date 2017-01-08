@@ -26,23 +26,43 @@ const axisThreshold = 10
 // the desired motor state for the Claw.
 func parseJSState(jsState joystick.State) *clawserver.SetClawStateRequest {
 	m1 := motor.State_STOPPED
-	leftRightAxis := jsState.AxisData[0]
-	if leftRightAxis < -axisThreshold {
+	if jsState.AxisData[0] < -axisThreshold {
 		m1 = motor.State_FORWARD
-	} else if leftRightAxis > axisThreshold {
+	} else if jsState.AxisData[0] > axisThreshold {
 		m1 = motor.State_BACKWARD
 	}
 
 	m2 := motor.State_STOPPED
-	upDownAxis := jsState.AxisData[1]
-	if upDownAxis > axisThreshold {
+	if jsState.AxisData[1] > axisThreshold {
 		m2 = motor.State_FORWARD
-	} else if upDownAxis < -axisThreshold {
+	} else if jsState.AxisData[1] < -axisThreshold {
 		m2 = motor.State_BACKWARD
 	}
 
+	m3 := motor.State_STOPPED
+	if jsState.AxisData[3] > axisThreshold {
+		m3 = motor.State_FORWARD
+	} else if jsState.AxisData[3] < -axisThreshold {
+		m3 = motor.State_BACKWARD
+	}
+
+	m4 := motor.State_STOPPED
+	if jsState.AxisData[4] > axisThreshold {
+		m4 = motor.State_FORWARD
+	} else if jsState.AxisData[4] < -axisThreshold {
+		m4 = motor.State_BACKWARD
+	}
+
+	m5 := motor.State_STOPPED
+	if jsState.AxisData[5] > axisThreshold {
+		m5 = motor.State_FORWARD
+	} else if jsState.AxisData[2] > axisThreshold {
+		m5 = motor.State_BACKWARD
+	}
+
 	return &clawserver.SetClawStateRequest{
-		MotorStates: []motor.State{m1, m2},
+		MotorStates: []motor.State{m1, m2, m3, m4, m5},
+		Led: jsState.Buttons[0],
 	}
 }
 
